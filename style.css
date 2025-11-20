@@ -4,4 +4,48 @@
 
 body {
   margin: 0;
+  /* background-color: black; */
+}
+
+h1,
+link,
+p,
+a {
+  color: white;
+  font-family: sans-serif;
+  text-align: center;
+}
+
+a {
+  text-decoration: none;
+  margin: 0 auto;
+}
+
+.container-title {
+  width: 50%;
+  margin: 5% auto;
+  & h1 {
+    font-size: 42px;
+  }
+  & p {
+    font-size: 32px;
+  }
+}
+
+.start {
+  width: 50%;
+  margin: 0% auto;
+  text-align: center;
+  & a {
+    display: block;
+    border: solid 2px white;
+    width: 200px;
+    padding: 0.5rem;
+    border-radius: 10px;
+    transition: ease-in-out 200ms;
+  }
+  & a:hover {
+    background: white;
+    color: black;
+  }
 }
