@@ -1,0 +1,54 @@
+# --- Node modules ---
+node_modules/
+
+# --- Logs ---
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.log
+
+# --- Dossiers de build ---
+dist/
+build/
+out/
+coverage/
+.tmp/
+.temp/
+
+# --- Environnements ---
+.env
+.env.*
+!.env.example
+
+# --- Cache ---
+.npm/
+.yarn/
+.pnpm-store/
+.cache/
+.eslintcache
+.stylelintcache
+
+# --- OS ---
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# --- Éditeurs ---
+# VSCode
+.vscode/
+.history/
+
+# JetBrains
+.idea/
+*.iml
+
+# --- Tests ---
+.jest/
+.jest-cache/
+.jest-coverage/
