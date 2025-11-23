@@ -1,26 +1,72 @@
+let mobs = [];
+
+//  Gestion des vagues
+
+let Level = 0;
+let spawnInWave = 0;
+let lastSpawn = 0;
+
+// Charge les fichiers avant que le jeu démarre
+
+function preload() {
+  blueprint = loadJSON("assets/data/enemyBlueprint.json");
+  basicModel = loadImage("assets/images/vaisseaux.webp");
+  basicBlast = loadImage("assets/images/explosion.png");
+}
+
 // Canvas
 
 function setup() {
-  background(500);
   let zone = createCanvas(windowWidth / 1.5, windowHeight, WEBGL);
   zone.parent("game-container");
-  spawnEnemy(0, -height / 2);
+  ortho(-width / 2, width / 2, -height / 2, height / 2, 0, 1000);
+  background(500);
+  // spawnEnemy("basic", 0, -height / 2);
 }
 
-// Dessin
+function spawnEnemy(type, x, y) {
+  const base = blueprint.types[type];
+  const config = {
+    ...base,
+    model: basicModel,
+    blast: basicBlast,
+  };
+  mobs.push(new Enemy(x, y, config));
+}
+
+// Boucle de jeu
 
 function draw() {
   background(0);
-  camera(0, 0, 500);
+  handleWaves();
   mobs.forEach((e) => {
     e.update();
     e.draw();
   });
+  mobs = mobs.filter((e) => !e.isDead());
 }
 
-let mobs = [];
+// Gestion automatique des vagues
 
-function spawnEnemy(x, y) {
-  const mob = new Enemy(x, y);
-  mobs.push(mob);
+function handleWaves() {
+  let wave = blueprint.waves[Level];
+  if (!wave) {
+    return;
+  }
+  if (spawnInWave < wave.count) {
+    if (millis() - lastSpawn > wave.spawnTime) {
+      let enemyType = blueprint.types[wave.type];
+
+      let margin = enemyType.size;
+      let x = random(-width / 2 + margin, width / 2 - margin);
+      let y = -height / 2 - margin;
+
+      spawnEnemy(wave.type, x, y);
+      spawnInWave++;
+      lastSpawn = millis();
+    }
+  } else {
+    Level++;
+    spawnInWave = 0;
+  }
 }

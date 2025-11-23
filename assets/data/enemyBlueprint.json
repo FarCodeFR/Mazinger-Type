@@ -1,0 +1,18 @@
+{
+  "types": {
+    "basic": {
+      "hp": 1,
+      "vx": 0,
+      "vy": 5,
+      "size": 70
+    }
+  },
+  "waves": [
+    {
+      "level": 1,
+      "count": 10,
+      "type": "basic",
+      "spawnTime": 200
+    }
+  ]
+}
