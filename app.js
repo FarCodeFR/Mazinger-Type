@@ -6,6 +6,10 @@ let Level = 0;
 let spawnInWave = 0;
 let lastSpawn = 0;
 
+// Gestion des tirs des ennemis
+
+let enemyBullets = [];
+
 // Charge les fichiers avant que le jeu démarre
 
 function preload() {
@@ -43,6 +47,11 @@ function draw() {
     e.update();
     e.draw();
   });
+  enemyBullets.forEach((b) => {
+    b.update();
+    b.draw();
+  });
+  enemyBullets = enemyBullets.filter((b) => !b.isDead());
   mobs = mobs.filter((e) => !e.isDead());
 }
 
@@ -54,7 +63,7 @@ function handleWaves() {
     return;
   }
   if (spawnInWave < wave.count) {
-    if (millis() - lastSpawn > wave.spawnTime) {
+    if (millis() - lastSpawn > wave.spawnTime + random(0, 700)) {
       let enemyType = blueprint.types[wave.type];
 
       let margin = enemyType.size;

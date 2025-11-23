@@ -4,7 +4,9 @@
       "hp": 1,
       "vx": 0,
       "vy": 5,
-      "size": 70
+      "size": 70,
+      "fireRate": 1200,
+      "bulletSpeed": 8
     }
   },
   "waves": [
@@ -12,7 +14,7 @@
       "level": 1,
       "count": 10,
       "type": "basic",
-      "spawnTime": 200
+      "spawnTime": 700
     }
   ]
 }
