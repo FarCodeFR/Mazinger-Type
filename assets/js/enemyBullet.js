@@ -18,6 +18,7 @@ class EnemyBullet {
     push();
     translate(this.x, this.y, 30);
     fill(this.color);
+    noStroke();
     plane(this.size, this.size * 3);
     pop();
   }
