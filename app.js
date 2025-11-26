@@ -27,7 +27,7 @@ function preload() {
   basicBlast = loadImage("assets/images/explosion.png");
 
   playerBlueprint = loadJSON("assets/data/playerBlueprint.json");
-  goldorakModel = loadImage("assets/images/alien.png");
+  goldorakModel = loadImage("assets/images/Goldorak.png");
 }
 
 // Canvas

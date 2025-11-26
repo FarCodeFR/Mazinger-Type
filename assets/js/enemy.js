@@ -70,10 +70,12 @@ class Enemy {
     if (this.dead) {
       // Affiche l'explosion
       texture(this.blast);
+      noStroke()
       plane(this.blastSize, this.blastSize);
     } else {
       // Affiche le vaisseau
       texture(this.model);
+      noStroke();
       plane(this.size, this.size);
     }
     pop();

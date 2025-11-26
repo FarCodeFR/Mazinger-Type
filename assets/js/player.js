@@ -12,6 +12,7 @@ class Player {
     push();
     translate(this.x, this.y, 20);
     texture(this.model);
+    noStroke()
     plane(this.size, this.size);
     pop();
   }
