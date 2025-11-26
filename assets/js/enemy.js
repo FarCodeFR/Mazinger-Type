@@ -21,6 +21,10 @@ class Enemy {
     //  Tirs
     this.fireRate = config.fireRate;
     this.bulletSpeed = config.bulletSpeed;
+    this.bulletSize = config.bulletSize;
+    this.bulletColor = config.bulletColor;
+
+    // Enregistrer le moment exact de l'apparition pour ensuite calculer quand il doit tirer
     this.lastShot = millis();
   }
 
@@ -33,10 +37,17 @@ class Enemy {
     this.y += this.vy;
 
     // Tirs
+    // millis temps actuel - temps du dernier tir > délai entre deux tirs
 
     if (millis() - this.lastShot > this.fireRate) {
       enemyBullets.push(
-        new EnemyBullet(this.x, this.y + this.size / 2, this.bulletSpeed)
+        new EnemyBullet(
+          this.x,
+          this.y + this.size / 2,
+          this.bulletSpeed,
+          this.bulletSize,
+          this.bulletColor
+        )
       );
       this.lastShot = millis();
     }
@@ -45,6 +56,7 @@ class Enemy {
     this.x = constrain(this.x, -width / 2 + margin, width / 2 - margin);
 
     // Sortie d'écran = mort
+    // Plus démarer le temps d'explosion avec millis
     if (this.y > height / 2 - this.size / 2) {
       this.dead = true;
       this.blastTimer = millis();
@@ -68,7 +80,7 @@ class Enemy {
   }
 
   isDead() {
-    // Mort en dehors de la zone
+    // Mort en dehors de la zone + vérification que l'explosion est terminée
     if (this.dead) {
       return millis() - this.blastTimer > this.duration;
     }

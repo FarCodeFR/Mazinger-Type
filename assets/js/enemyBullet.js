@@ -1,23 +1,24 @@
 class EnemyBullet {
-  constructor(x, y) {
+  constructor(x, y, bulletSpeed, bulletSize, color) {
     this.x = x;
     this.y = y;
-    this.speed = 12;
-    this.size = 5;
+    this.speed = bulletSpeed;
+    this.size = bulletSize;
     this.dead = false;
+    this.color = color;
   }
 
   update() {
-    this.y += this.speed; // tire vers le bas
+    // tire vers le bas
+    this.y += this.speed;
     if (this.y > height / 2 + this.size) this.dead = true;
   }
 
   draw() {
     push();
-    translate(this.x, this.y, 20);
-    noStroke();
-    fill(255, 0, 0);
-    plane(this.size, this.size * 2);
+    translate(this.x, this.y, 30);
+    fill(this.color);
+    plane(this.size, this.size * 3);
     pop();
   }
 
