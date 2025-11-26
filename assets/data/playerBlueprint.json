@@ -1,0 +1,11 @@
+{
+  "player": {
+    "hp": 5,
+    "speed": 8,
+    "size": 60,
+    "fireRate": 300,
+    "bulletSpeed": 15,
+    "bulletSize": 8,
+    "bulletColor": "yellow" 
+  }
+}
