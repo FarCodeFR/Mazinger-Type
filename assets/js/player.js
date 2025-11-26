@@ -8,5 +8,11 @@ class Player {
     this.model = config.model;
   }
 
-
+  draw() {
+    push();
+    translate(this.x, this.y, 20);
+    texture(this.model);
+    plane(this.size, this.size);
+    pop();
+  }
 }
