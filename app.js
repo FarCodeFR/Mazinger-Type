@@ -15,12 +15,19 @@ let basicModel;
 let alienModel;
 let basicBlast;
 
+let playerBlueprint;
+let goldorak;
+let goldorakModel;
+
 // Charge les fichiers avant que le jeu démarre
 function preload() {
   blueprint = loadJSON("assets/data/enemyBlueprint.json");
   basicModel = loadImage("assets/images/vaisseaux.webp");
   alienModel = loadImage("assets/images/alien.png");
   basicBlast = loadImage("assets/images/explosion.png");
+
+  playerBlueprint = loadJSON("assets/data/playerBlueprint.json");
+  goldorakModel = loadImage("assets/images/alien.png");
 }
 
 // Canvas
@@ -30,6 +37,14 @@ function setup() {
   ortho(-width / 2, width / 2, -height / 2, height / 2, 0, 1000);
   background(500);
   // spawnEnemy("basic", 0, -height / 2);
+
+  const stats = playerBlueprint.goldorak;
+  const playerConfig = {
+    ...stats,
+    model: goldorakModel
+  }
+
+  goldorak = new Player(height / 2 - 100, playerConfig);
 }
 
 function spawnEnemy(type, x, y) {
@@ -61,6 +76,8 @@ function draw() {
   });
   enemyBullets = enemyBullets.filter((b) => !b.isDead());
   mobs = mobs.filter((m) => !m.isDead());
+
+  goldorak.draw();
 }
 
 // Gestion automatique des vagues

@@ -1,6 +1,7 @@
 {
-  "player": {
-    "hp": 5,
+  "goldorak": {
+    "name": "Goldorak",
+    "hp": 10,
     "speed": 8,
     "size": 60,
     "fireRate": 300,
