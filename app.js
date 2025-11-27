@@ -77,6 +77,7 @@ function draw() {
   enemyBullets = enemyBullets.filter((b) => !b.isDead());
   mobs = mobs.filter((m) => !m.isDead());
 
+  goldorak.update();
   goldorak.draw();
 }
 
