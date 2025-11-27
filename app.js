@@ -84,25 +84,6 @@ function spawnEnemy(type, x, y) {
   mobs.push(new Enemy(x, y, config));
 }
 
-// Boucle de jeu
-function draw() {
-  background(0);
-  handleWaves();
-  mobs.forEach((e) => {
-    e.update();
-    e.draw();
-  });
-  enemyBullets.forEach((b) => {
-    b.update();
-    b.draw();
-  });
-  enemyBullets = enemyBullets.filter((b) => !b.isDead());
-  mobs = mobs.filter((m) => !m.isDead());
-
-  goldorak.update();
-  goldorak.draw();
-}
-
 // Gestion automatique des vagues
 function handleWaves() {
   let wave = blueprint.waves[Level];
@@ -204,5 +185,6 @@ function draw() {
   enemyBullets = enemyBullets.filter((b) => !b.isDead());
   mobs = mobs.filter((m) => !m.isDead());
 
+  goldorak.update();
   goldorak.draw();
 }
