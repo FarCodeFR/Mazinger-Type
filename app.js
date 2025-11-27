@@ -21,14 +21,18 @@ let goldorak;
 let goldorakModel;
 
 // Background map
-
 let mapOne;
 let mapTwo;
 let mapThree;
 let mapFour;
 let activeMap;
 
-let nextMap = null;
+// Transition
+let autoMoveUp = false;
+const autoMoveSpeed = 8;
+let playerBaseY;
+
+let nextLevel = null;
 
 // Scroll du background
 let bgScroll = 0;
@@ -66,7 +70,8 @@ function setup() {
     model: goldorakModel,
   };
 
-  goldorak = new Player(height / 2 - 100, playerConfig);
+  playerBaseY = height / 2 - 100;
+  goldorak = new Player(playerBaseY, playerConfig);
 }
 
 function spawnEnemy(type, x, y) {
@@ -92,21 +97,14 @@ function handleWaves() {
     return;
   }
 
-  // Attend qu'il n'y à plus d'ennemis pour passer à la vague suivante
+  // Attendre que tout les ennemis disparaisse pour passer à la vague suivante
   if (spawnInWave >= wave.count) {
-    if (mobs.length === 0 && millis() > nextWave) {
-      Level++;
-      spawnInWave = 0;
+    if (mobs.length === 0 && millis() > nextWave && !autoMoveUp) {
+      // on prépare juste le prochain niveau, sans changer tout de suite
+      nextLevel = Level + 1;
 
-      // Changement de map
-      let newWave = blueprint.waves[Level];
-      if (newWave) {
-        activeMap = changeMap(newWave);
-      }
-      // Enregistre le début de la nouvelle vague en temps
-      lastSpawn = millis();
-      // Calcul le temps ou la prochaine vague pourra commencer
-      nextWave = millis() + waveCooldown;
+      // le vaisseau va commencer à monter
+      autoMoveUp = true;
     }
     return;
   }
@@ -171,20 +169,52 @@ function changeMap(wave) {
 // Boucle de jeu
 function draw() {
   background(0);
-  // Thème de la map
-  backgroundScrollMap();
-  handleWaves();
-  mobs.forEach((e) => {
-    e.update();
-    e.draw();
-  });
-  enemyBullets.forEach((b) => {
-    b.update();
-    b.draw();
-  });
-  enemyBullets = enemyBullets.filter((b) => !b.isDead());
-  mobs = mobs.filter((m) => !m.isDead());
 
-  goldorak.update();
-  goldorak.draw();
+  // Fond qui défile
+  backgroundScrollMap();
+
+  if (autoMoveUp) {
+    // le vaisseau monte
+    goldorak.y -= autoMoveSpeed;
+
+    // quand il sort par le haut
+    if (goldorak.y < -height / 2 - 100) {
+      // Change de Level et de thème
+      Level = nextLevel;
+      spawnInWave = 0;
+
+      let newWave = blueprint.waves[Level];
+      if (newWave) {
+        activeMap = changeMap(newWave);
+      }
+
+      // on remet le vaisseau en bas de l'écran sur la nouvelle map
+      goldorak.y = height / 2 + 100;
+
+      // on relance les timers pour la nouvelle vague
+      lastSpawn = millis();
+      nextWave = millis() + waveCooldown;
+
+      autoMoveUp = false;
+    }
+
+    goldorak.draw();
+  } else {
+    // Jeu normal
+    handleWaves();
+
+    mobs.forEach((e) => {
+      e.update();
+      e.draw();
+    });
+    enemyBullets.forEach((b) => {
+      b.update();
+      b.draw();
+    });
+    enemyBullets = enemyBullets.filter((b) => !b.isDead());
+    mobs = mobs.filter((m) => !m.isDead());
+
+    goldorak.update();
+    goldorak.draw();
+  }
 }
