@@ -15,6 +15,7 @@ let basicModel;
 let alienModel;
 let basicBlast;
 
+let blueprint;
 let playerBlueprint;
 let goldorak;
 let goldorakModel;
@@ -26,6 +27,8 @@ let mapTwo;
 let mapThree;
 let mapFour;
 let activeMap;
+
+let nextMap = null;
 
 // Scroll du background
 let bgScroll = 0;
@@ -40,18 +43,20 @@ function preload() {
 
   playerBlueprint = loadJSON("assets/data/playerBlueprint.json");
   goldorakModel = loadImage("assets/images/player/Goldorak.png");
+
   mapOne = loadImage("assets/images/themes/mapOne.png");
   mapTwo = loadImage("assets/images/themes/mapTwo.png");
   mapThree = loadImage("assets/images/themes/mapThree.png");
-  mapFour = loadimage("assets/images/themes/mapFour.png");
+  mapFour = loadImage("assets/images/themes/mapFour.png");
 }
 
 // Canvas
 function setup() {
   let zone = createCanvas(windowWidth / 1.5, windowHeight, WEBGL);
   zone.parent("game-container");
+
   ortho(-width / 2, width / 2, -height / 2, height / 2, 0, 1000);
-  // spawnEnemy("basic", 0, -height / 2);
+
   let firstWave = blueprint.waves[Level];
   activeMap = changeMap(firstWave);
 

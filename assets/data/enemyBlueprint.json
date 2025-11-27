@@ -23,8 +23,29 @@
   },
   "waves": [
     {
+      "level": 1,
+      "count": 2,
+      "type": "basic",
+      "spawnTime": 2000,
+      "theme": "mapOne"
+    },
+    {
+      "level": 2,
+      "count": 2,
+      "type": "basic",
+      "spawnTime": 2000,
+      "theme": "mapOne"
+    },
+    {
+      "level": 3,
+      "count": 2,
+      "type": "alien",
+      "spawnTime": 3000,
+      "theme": "mapTwo"
+    },
+    {
       "level": 4,
-      "count": 20,
+      "count": 2,
       "type": ["alien", "basic"],
       "spawnTime": 1500,
       "theme": "mapTwo"
