@@ -8,6 +8,27 @@ class Player {
     this.model = config.model;
   }
 
+  update() {
+    if (keyIsDown(LEFT_ARROW)){
+      this.x -= this.speed;
+    }
+
+    if (keyIsDown(RIGHT_ARROW)) {
+      this.x += this.speed;
+    }
+
+    if (keyIsDown(UP_ARROW)) {
+      this.y -= this.speed;
+    }
+
+    if (keyIsDown(DOWN_ARROW)) {
+      this.y += this.speed;
+    }
+
+    this.x = constrain(this.x, (-width + this.size) / 2, (width - this.size) / 2 );
+    this.y = constrain(this.y ,(-height + this.size) / 2, (height - this.size) / 2)
+  }
+
   draw() {
     push();
     translate(this.x, this.y, 20);
