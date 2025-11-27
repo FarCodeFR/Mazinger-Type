@@ -25,7 +25,8 @@ class Player {
       this.y += this.speed;
     }
 
-    this.x = constrain(this.x, (-width + this.size) / 2, (width - this.size) / 2, -height / 2, height / 2)
+    this.x = constrain(this.x, (-width + this.size) / 2, (width - this.size) / 2 );
+    this.y = constrain(this.y ,(-height + this.size) / 2, (height - this.size) / 2)
   }
 
   draw() {
