@@ -15,34 +15,56 @@ let basicModel;
 let alienModel;
 let basicBlast;
 
+let blueprint;
 let playerBlueprint;
 let goldorak;
 let goldorakModel;
 
+// Background map
+
+let mapOne;
+let mapTwo;
+let mapThree;
+let mapFour;
+let activeMap;
+
+let nextMap = null;
+
+// Scroll du background
+let bgScroll = 0;
+let bgSpeed = 0.5;
+
 // Charge les fichiers avant que le jeu démarre
 function preload() {
   blueprint = loadJSON("assets/data/enemyBlueprint.json");
-  basicModel = loadImage("assets/images/vaisseaux.webp");
-  alienModel = loadImage("assets/images/alien.png");
-  basicBlast = loadImage("assets/images/explosion.png");
+  basicModel = loadImage("assets/images/enemy/vaisseaux.webp");
+  alienModel = loadImage("assets/images/enemy/alien.png");
+  basicBlast = loadImage("assets/images/enemy/explosion.png");
 
   playerBlueprint = loadJSON("assets/data/playerBlueprint.json");
-  goldorakModel = loadImage("assets/images/Goldorak.png");
+  goldorakModel = loadImage("assets/images/player/Goldorak.png");
+
+  mapOne = loadImage("assets/images/themes/mapOne.png");
+  mapTwo = loadImage("assets/images/themes/mapTwo.png");
+  mapThree = loadImage("assets/images/themes/mapThree.png");
+  mapFour = loadImage("assets/images/themes/mapFour.png");
 }
 
 // Canvas
 function setup() {
   let zone = createCanvas(windowWidth / 1.5, windowHeight, WEBGL);
   zone.parent("game-container");
+
   ortho(-width / 2, width / 2, -height / 2, height / 2, 0, 1000);
-  background(500);
-  // spawnEnemy("basic", 0, -height / 2);
+
+  let firstWave = blueprint.waves[Level];
+  activeMap = changeMap(firstWave);
 
   const stats = playerBlueprint.goldorak;
   const playerConfig = {
     ...stats,
-    model: goldorakModel
-  }
+    model: goldorakModel,
+  };
 
   goldorak = new Player(height / 2 - 100, playerConfig);
 }
@@ -94,6 +116,12 @@ function handleWaves() {
     if (mobs.length === 0 && millis() > nextWave) {
       Level++;
       spawnInWave = 0;
+
+      // Changement de map
+      let newWave = blueprint.waves[Level];
+      if (newWave) {
+        activeMap = changeMap(newWave);
+      }
       // Enregistre le début de la nouvelle vague en temps
       lastSpawn = millis();
       // Calcul le temps ou la prochaine vague pourra commencer
@@ -124,4 +152,57 @@ function handleWaves() {
     // Quand l'ennemie apparaît lance un nouveau point de départ avant le prochain spawn
     lastSpawn = millis();
   }
+}
+
+function backgroundScrollMap() {
+  bgScroll += bgSpeed;
+
+  if (bgScroll >= height) {
+    bgScroll = 0;
+  }
+  push();
+  imageMode(CENTER);
+  translate(0, bgScroll);
+  image(activeMap, 0, 0, width, height);
+  image(activeMap, 0, -height, width, height);
+  pop();
+}
+
+// Changement de thème
+function changeMap(wave) {
+  if (!wave) {
+    return mapOne;
+  }
+  switch (wave.theme) {
+    case "mapOne":
+      return mapOne;
+    case "mapTwo":
+      return mapTwo;
+    case "mapThree":
+      return mapThree;
+    case "mapFour":
+      return mapFour;
+    default:
+      return mapOne;
+  }
+}
+
+// Boucle de jeu
+function draw() {
+  background(0);
+  // Thème de la map
+  backgroundScrollMap();
+  handleWaves();
+  mobs.forEach((e) => {
+    e.update();
+    e.draw();
+  });
+  enemyBullets.forEach((b) => {
+    b.update();
+    b.draw();
+  });
+  enemyBullets = enemyBullets.filter((b) => !b.isDead());
+  mobs = mobs.filter((m) => !m.isDead());
+
+  goldorak.draw();
 }
