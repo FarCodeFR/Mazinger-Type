@@ -3,10 +3,10 @@
     "name": "Goldorak",
     "hp": 10,
     "speed": 8,
-    "size": 100,
+    "size": 70,
     "fireRate": 300,
     "bulletSpeed": 15,
     "bulletSize": 8,
-    "bulletColor": "yellow" 
+    "bulletColor": "yellow"
   }
 }
