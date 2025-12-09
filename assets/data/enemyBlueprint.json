@@ -19,13 +19,24 @@
       "bulletSpeed": 10,
       "bulletSize": 10,
       "bulletColor": "green"
+    },
+    "spaceship": {
+      "hp": 3,
+      "vx": 0,
+      "vy": 2,
+      "size": 100,
+      "fireRate": 2000,
+      "bulletSpeed": 10,
+      "bulletSize": 20,
+      "bulletColor": "purple",
+      "bulletShape": "circle"
     }
   },
   "waves": [
     {
       "level": 1,
       "count": 2,
-      "type": "basic",
+      "type": "spaceship",
       "spawnTime": 2000,
       "theme": "mapOne"
     },
