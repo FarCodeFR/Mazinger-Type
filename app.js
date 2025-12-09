@@ -44,6 +44,7 @@ function preload() {
   basicModel = loadImage("assets/images/enemy/vaisseaux.webp");
   alienModel = loadImage("assets/images/enemy/alien.png");
   basicBlast = loadImage("assets/images/enemy/explosion.png");
+  spaceShip = loadImage("assets/images/enemy/spaceship.jpg");
 
   playerBlueprint = loadJSON("assets/data/playerBlueprint.json");
   goldorakModel = loadImage("assets/images/player/Goldorak.png");
@@ -74,12 +75,16 @@ function setup() {
   goldorak = new Player(playerBaseY, playerConfig);
 }
 
+// swith enemy
+
 function spawnEnemy(type, x, y) {
   const base = blueprint.types[type];
   // Image change en fonction du type d'ennemi
   let modelSelect = basicModel;
   if (type === "alien") {
     modelSelect = alienModel;
+  } else if (type === "spaceship") {
+    modelSelect = spaceShip;
   }
   const config = {
     ...base,
