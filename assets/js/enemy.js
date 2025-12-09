@@ -23,6 +23,17 @@ class Enemy {
     this.bulletSpeed = config.bulletSpeed;
     this.bulletSize = config.bulletSize;
     this.bulletColor = config.bulletColor;
+    this.bulletShape = config.bulletShape;
+    // Pattern de tir
+    this.bulletPatterns = config.bulletPatterns || "straight";
+
+    // Spirale
+    this.shotAngle = HALF_PI;
+    this.shotAngleSpeed = config.shotAngleSpeed || 0;
+
+    // Animation du tir
+    this.bulletSpiralColor = config.bulletSpiralColor || this.bulletColor;
+    this.bulletRotationSpeed = config.bulletRotationSpeed || 0;
 
     // Enregistrer le moment exact de l'apparition pour ensuite calculer quand il doit tirer
     this.lastShot = millis();
@@ -38,17 +49,12 @@ class Enemy {
 
     // Tirs
     // millis temps actuel - temps du dernier tir > délai entre deux tirs
-
     if (millis() - this.lastShot > this.fireRate) {
-      enemyBullets.push(
-        new EnemyBullet(
-          this.x,
-          this.y + this.size / 2,
-          this.bulletSpeed,
-          this.bulletSize,
-          this.bulletColor
-        )
-      );
+      const pattern =
+        bulletPatterns[this.bulletPatterns] || bulletPatterns.straight;
+
+      pattern(this, enemyBullets);
+
       this.lastShot = millis();
     }
 
@@ -70,7 +76,7 @@ class Enemy {
     if (this.dead) {
       // Affiche l'explosion
       texture(this.blast);
-      noStroke()
+      noStroke();
       plane(this.blastSize, this.blastSize);
     } else {
       // Affiche le vaisseau
