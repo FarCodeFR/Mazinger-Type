@@ -45,6 +45,7 @@ function preload() {
   alienModel = loadImage("assets/images/enemy/alien.png");
   basicBlast = loadImage("assets/images/enemy/explosion.png");
   spaceShip = loadImage("assets/images/enemy/spaceship.jpg");
+  eye = loadImage("assets/images/enemy/eyebot.png");
 
   playerBlueprint = loadJSON("assets/data/playerBlueprint.json");
   goldorakModel = loadImage("assets/images/player/Goldorak.png");
@@ -85,6 +86,8 @@ function spawnEnemy(type, x, y) {
     modelSelect = alienModel;
   } else if (type === "spaceship") {
     modelSelect = spaceShip;
+  } else if (type === "eye") {
+    modelSelect = eye;
   }
   const config = {
     ...base,
