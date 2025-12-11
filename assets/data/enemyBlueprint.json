@@ -10,7 +10,7 @@
       "bulletSize": 10,
       "bulletColor": "red",
       "bulletShape": "square",
-      "bulletPatterns": "straight"
+      "bulletPatterns": "regular"
     },
     "eye": {
       "hp": 3,
@@ -38,7 +38,7 @@
       "bulletColor": "green",
       "bulletShape": "triangle",
       "shotAngle": null,
-      "bulletPatterns": "straight"
+      "bulletPatterns": "boom"
     },
     "spaceship": {
       "hp": 3,
@@ -46,26 +46,26 @@
       "vy": 2,
       "size": 100,
       "fireRate": 2000,
-      "bulletSpeed": 10,
-      "bulletSize": 10,
-      "bulletColor": "purple",
+      "bulletSpeed": 5,
+      "bulletSize": 7,
+      "bulletColor": "red",
       "bulletShape": "circle",
       "shotAngle": null,
-      "bulletPatterns": "straight"
+      "bulletPatterns": "shotgun"
     }
   },
   "waves": [
     {
       "level": 1,
-      "count": 8,
-      "type": "eye",
+      "count": 2,
+      "type": "basic",
       "spawnTime": 2000,
       "theme": "mapOne"
     },
     {
       "level": 2,
-      "count": 2,
-      "type": "spaceship",
+      "count": 1,
+      "type": ["eye", "basic", "alien", "spaceship"],
       "spawnTime": 2000,
       "theme": "mapOne"
     },
