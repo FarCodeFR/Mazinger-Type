@@ -27,6 +27,22 @@
       "bulletRotationSpeed": 5,
       "bulletPatterns": "spiral"
     },
+    "bossOne": {
+      "hp": 3,
+      "vx": 1.2,
+      "vy": 0,
+      "size": 200,
+      "fireRate": 80,
+      "bulletSpeed": 5,
+      "bulletSize": 5,
+      "bulletColor": "blue",
+      "bulletShape": "circle",
+      "shotAngleSpeed": 0.2,
+      "bulletSpiralColor": "red",
+      "bulletRotationSpeed": 5,
+      "bulletPatterns": ["boss_ring", "boss_homing", "boss_heavy"],
+      "displayName": "MEGABOSS"
+    },
     "alien": {
       "hp": 3,
       "vx": 0,
@@ -57,35 +73,43 @@
   "waves": [
     {
       "level": 1,
-      "count": 2,
+      "count": 5,
       "type": "basic",
-      "spawnTime": 2000,
+      "spawnTime": 500,
+      "spawnPattern": "diagonal",
       "theme": "mapOne"
     },
     {
       "level": 2,
-      "count": 1,
-      "type": ["eye", "basic", "alien", "spaceship"],
-      "spawnTime": 2000,
-      "theme": "mapOne"
+      "count": 10,
+      "type": ["basic"],
+      "spawnTime": 100,
+      "spawnPattern": "formation",
+      "theme": "mapTwo"
     },
     {
       "level": 3,
-      "count": 2,
-      "type": "alien",
-      "spawnTime": 3000,
+      "count": 15,
+      "type": ["alien", "eye"],
+      "spawnTime": 1000,
+      "spawnPattern": "star",
       "theme": "mapTwo"
     },
     {
       "level": 4,
-      "count": 2,
-      "type": ["alien", "basic"],
-      "spawnTime": 1500,
+      "count": 30,
+      "type": ["spaceship", "basic"],
+      "spawnTime": 200,
+      "spawnPattern": "wave",
       "theme": "mapTwo"
     },
     {
       "level": 5,
-      "theme": "mapThree"
+      "theme": "mapThree",
+      "count": 30,
+      "type": ["spaceship", "basic"],
+      "spawnTime": 200,
+      "spawnPattern": "line"
     },
     {
       "level": 6,
