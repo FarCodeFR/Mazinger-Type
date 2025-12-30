@@ -20,6 +20,9 @@ let playerBlueprint;
 let goldorak;
 let goldorakModel;
 
+// Boss
+let bossOne;
+
 // Background map
 let mapOne;
 let mapTwo;
@@ -49,6 +52,8 @@ function preload() {
 
   playerBlueprint = loadJSON("assets/data/playerBlueprint.json");
   goldorakModel = loadImage("assets/images/player/Goldorak.png");
+
+  bossOne = loadImage("assets/images/enemy/bossOne.png");
 
   mapOne = loadImage("assets/images/themes/mapOne.png");
   mapTwo = loadImage("assets/images/themes/mapTwo.png");
@@ -88,9 +93,12 @@ function spawnEnemy(type, x, y) {
     modelSelect = spaceShip;
   } else if (type === "eye") {
     modelSelect = eye;
+  } else if (type === "bossOne") {
+    modelSelect = bossOne;
   }
   const config = {
     ...base,
+    type,
     model: modelSelect,
     blast: basicBlast,
   };
@@ -129,12 +137,26 @@ function handleWaves() {
       anotherEnemy = wave.type;
     }
     let enemyType = blueprint.types[anotherEnemy];
-    let margin = enemyType.size;
 
-    let x = random(-width / 2 + margin, width / 2 - margin);
-    let y = -height / 2 - margin;
+    // Récupérer le pattern de spawn (par défaut 'random')
+    const patternName = wave.spawnPattern || "random";
+    const patternFunc = spawnPatterns[patternName] || spawnPatterns.random;
 
-    spawnEnemy(anotherEnemy, x, y);
+    // Calculer toutes les positions du pattern en une seule fois
+    const allPositions = patternFunc(
+      Level,
+      enemyType,
+      wave.count,
+      width,
+      height
+    );
+
+    // Spawn l'ennemi à la position correspondante
+    if (spawnInWave < allPositions.length) {
+      const pos = allPositions[spawnInWave];
+      spawnEnemy(anotherEnemy, pos.x, pos.y);
+    }
+
     spawnInWave++;
     // Quand l'ennemie apparaît lance un nouveau point de départ avant le prochain spawn
     lastSpawn = millis();
@@ -224,5 +246,17 @@ function draw() {
 
     goldorak.update();
     goldorak.draw();
+  }
+
+  // Mettre à jour l'affichage du level
+  const levelDisplay = document.getElementById("level-display");
+  if (levelDisplay) {
+    levelDisplay.textContent = `Level: ${Level + 1}`;
+  }
+
+  // Mettre à jour le titre de l'onglet
+  const pageTitle = document.getElementById("page-title");
+  if (pageTitle) {
+    pageTitle.textContent = `Mazinger - Level ${Level + 1}`;
   }
 }

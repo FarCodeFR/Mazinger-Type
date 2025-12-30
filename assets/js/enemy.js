@@ -27,6 +27,32 @@ class Enemy {
     // Pattern de tir
     this.bulletPatterns = config.bulletPatterns || "straight";
 
+    // Type (utile pour comportements spécifiques comme le boss)
+    this.type = config.type;
+
+    // Comportement par défaut pour le boss : spawn en haut et patrouille horizontale
+    if (this.type === "bossOne") {
+      this.vy = 0;
+      // vitesse horizontale réduite par défaut (modifiable depuis le blueprint)
+      this.vx =
+        config.vx && Math.abs(config.vx) > 0 ? Math.sign(config.vx) * 1.2 : 1.2;
+      if (typeof height !== "undefined") {
+        this.y = -height / 2 + this.size;
+      }
+
+      // Supporter une liste de patterns pour alterner au rebond
+      if (Array.isArray(config.bulletPatterns)) {
+        this.patternList = config.bulletPatterns;
+      } else if (Array.isArray(config.bulletPatternsList)) {
+        this.patternList = config.bulletPatternsList;
+      } else {
+        this.patternList = [config.bulletPatterns || "straight"];
+      }
+      this.currentPatternIndex = 0;
+      this.bulletPatterns =
+        this.patternList[this.currentPatternIndex] || this.bulletPatterns;
+    }
+
     // Spirale
     this.shotAngle = HALF_PI;
     this.shotAngleSpeed = config.shotAngleSpeed || 0;
@@ -37,6 +63,8 @@ class Enemy {
 
     // Enregistrer le moment exact de l'apparition pour ensuite calculer quand il doit tirer
     this.lastShot = millis();
+    // Tremblement temporaire (ms)
+    this.trembleUntil = 0;
   }
 
   update() {
@@ -61,8 +89,41 @@ class Enemy {
     let margin = this.size;
     this.x = constrain(this.x, -width / 2 + margin, width / 2 - margin);
 
-    // Sortie d'écran = mort
-    // Plus démarer le temps d'explosion avec millis
+    // Comportement spécifique pour le boss : rester en haut et patrouiller horizontalement
+    if (this.type === "bossOne") {
+      let leftLimit = -width / 2 + margin;
+      let rightLimit = width / 2 - margin;
+      let topLimit = -height / 2 + margin;
+      let bottomLimit = topLimit + Math.max(this.size * 2, 150);
+
+      // Contrainte verticale (reste en haut)
+      this.y = constrain(this.y, topLimit, bottomLimit);
+
+      // Rebond horizontal aux bords
+      if (this.x <= leftLimit + 1 && this.vx < 0) {
+        this.vx *= -1;
+        this.x = leftLimit + 1;
+        // Changer le pattern au rebond
+        if (this.patternList && this.patternList.length > 1) {
+          this.currentPatternIndex =
+            (this.currentPatternIndex + 1) % this.patternList.length;
+          this.bulletPatterns = this.patternList[this.currentPatternIndex];
+        }
+      } else if (this.x >= rightLimit - 1 && this.vx > 0) {
+        this.vx *= -1;
+        this.x = rightLimit - 1;
+        // Changer le pattern au rebond
+        if (this.patternList && this.patternList.length > 1) {
+          this.currentPatternIndex =
+            (this.currentPatternIndex + 1) % this.patternList.length;
+          this.bulletPatterns = this.patternList[this.currentPatternIndex];
+        }
+      }
+      return;
+    }
+
+    // Sortie d'écran = mort (pour les ennemis classiques)
+    // Lance le timer d'explosion
     if (this.y > height / 2 - this.size / 2) {
       this.dead = true;
       this.blastTimer = millis();
@@ -72,7 +133,15 @@ class Enemy {
   // Affichage de l'ennemi
   draw() {
     push();
-    translate(this.x, this.y, 10);
+    // Appliquer un léger tremblement si demandé
+    let tx = this.x;
+    let ty = this.y;
+    if (this.trembleUntil && millis() < this.trembleUntil) {
+      const j = Math.max(2, this.size * 0.02);
+      tx += random(-j, j);
+      ty += random(-j, j);
+    }
+    translate(tx, ty, 10);
     if (this.dead) {
       // Affiche l'explosion
       texture(this.blast);
