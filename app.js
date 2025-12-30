@@ -253,4 +253,10 @@ function draw() {
   if (levelDisplay) {
     levelDisplay.textContent = `Level: ${Level + 1}`;
   }
+
+  // Mettre à jour le titre de l'onglet
+  const pageTitle = document.getElementById("page-title");
+  if (pageTitle) {
+    pageTitle.textContent = `Mazinger - Level ${Level + 1}`;
+  }
 }
