@@ -10,7 +10,8 @@
       "bulletSize": 10,
       "bulletColor": "red",
       "bulletShape": "square",
-      "bulletPatterns": "regular"
+      "bulletPatterns": "regular",
+      "score": 100
     },
     "eye": {
       "hp": 3,
@@ -25,7 +26,34 @@
       "shotAngleSpeed": 0.2,
       "bulletSpiralColor": "orange",
       "bulletRotationSpeed": 5,
-      "bulletPatterns": "spiral"
+      "bulletPatterns": "spiral",
+      "score": 300
+    },
+    "alien": {
+      "hp": 3,
+      "vx": 0,
+      "vy": 2,
+      "size": 100,
+      "fireRate": 2000,
+      "bulletSpeed": 5,
+      "bulletSize": 10,
+      "bulletColor": "green",
+      "bulletShape": "triangle",
+      "bulletPatterns": "boom",
+      "score": 250
+    },
+    "spaceship": {
+      "hp": 3,
+      "vx": 0,
+      "vy": 2,
+      "size": 100,
+      "fireRate": 2000,
+      "bulletSpeed": 5,
+      "bulletSize": 7,
+      "bulletColor": "red",
+      "bulletShape": "circle",
+      "bulletPatterns": "shotgun",
+      "score": 200
     },
     "bossOne": {
       "hp": 20,
@@ -41,86 +69,82 @@
       "bulletSpiralColor": "red",
       "bulletRotationSpeed": 5,
       "bulletPatterns": ["boss_ring", "boss_homing", "boss_heavy"],
-      "displayName": "MEGABOSS"
-    },
-    "alien": {
-      "hp": 3,
-      "vx": 0,
-      "vy": 2,
-      "size": 100,
-      "fireRate": 2000,
-      "bulletSpeed": 5,
-      "bulletSize": 10,
-      "bulletColor": "green",
-      "bulletShape": "triangle",
-      "shotAngle": null,
-      "bulletPatterns": "boom"
-    },
-    "spaceship": {
-      "hp": 3,
-      "vx": 0,
-      "vy": 2,
-      "size": 100,
-      "fireRate": 2000,
-      "bulletSpeed": 5,
-      "bulletSize": 7,
-      "bulletColor": "red",
-      "bulletShape": "circle",
-      "shotAngle": null,
-      "bulletPatterns": "shotgun"
+      "displayName": "MEGABOSS",
+      "score": 5000
     }
   },
   "waves": [
     {
       "level": 1,
-      "count": 5,
+      "count": 6,
       "type": "basic",
-      "spawnTime": 500,
-      "spawnPattern": "diagonal",
+      "spawnTime": 750,
+      "spawnPattern": "line",
       "theme": "mapOne"
     },
     {
       "level": 2,
-      "count": 10,
-      "type": ["basic"],
-      "spawnTime": 100,
-      "spawnPattern": "formation",
+      "count": 8,
+      "type": "basic",
+      "spawnTime": 650,
+      "spawnPattern": "diagonal",
       "theme": "mapOne"
     },
     {
       "level": 3,
-      "count": 15,
-      "type": ["alien", "basic"],
-      "spawnTime": 1000,
-      "spawnPattern": "star",
+      "count": 10,
+      "type": "basic",
+      "spawnTime": 560,
+      "spawnPattern": "wave",
       "theme": "mapOne"
     },
     {
       "level": 4,
-      "count": 1,
-      "type": ["bossOne"],
-      "spawnTime": 1000,
-      "spawnPattern": "wave",
+      "count": 8,
+      "type": ["basic", "alien"],
+      "spawnTime": 600,
+      "spawnPattern": "formation",
       "theme": "mapOne"
     },
     {
       "level": 5,
-      "count": 30,
+      "count": 10,
+      "type": ["basic", "alien", "eye"],
+      "spawnTime": 520,
+      "spawnPattern": "columns",
+      "theme": "mapOne"
+    },
+    {
+      "level": 6,
+      "count": 1,
+      "type": "bossOne",
+      "spawnTime": 800,
+      "spawnPattern": "random",
+      "theme": "mapOne"
+    },
+
+    {
+      "level": 9,
+      "count": 14,
       "type": ["eye", "basic"],
-      "spawnTime": 200,
+      "spawnTime": 250,
       "spawnPattern": "wave",
       "theme": "mapTwo"
     },
     {
-      "level": 6,
-      "theme": "mapThree",
+      "level": 10,
       "count": 30,
       "type": ["spaceship", "basic"],
       "spawnTime": 200,
-      "spawnPattern": "line"
+      "spawnPattern": "line",
+      "theme": "mapThree"
     },
     {
-      "level": 7,
+      "level": 11,
+      "count": 1,
+      "type": "bossOne",
+      "spawnTime": 0,
+      "spawnPattern": "random",
       "theme": "mapFour"
     }
   ]

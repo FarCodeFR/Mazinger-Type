@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,16 +9,75 @@
       rel="shortcut icon"
       type="image/x-icon"
     />
-    <script src="./index.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
     <title>Mazinger-Type</title>
   </head>
-  <body>
-    <header class="container-title">
-      <h1>BIEVENUE SUR </br> MAZINGER TYPE !</h1>
-      <p>Meileur score : </p>
-    </header>
-    <main class="start">
-    <a href="./game.html">Play</a>
+
+  <body class="home home-arcade">
+    <div class="arcade-bg"></div>
+    <div class="arcade-scanlines"></div>
+    <div class="arcade-vignette"></div>
+
+    <main class="arcade-wrap">
+      <header class="arcade-header">
+        <h1 class="arcade-title">MAZINGER TYPE</h1>
+        <p class="arcade-tagline">Survive • Score • Boss</p>
+
+        <div class="arcade-badge">
+          <span class="badge-label">Meilleur score</span>
+          <span id="best-score" class="badge-value">0</span>
+        </div>
+      </header>
+
+      <nav class="arcade-menu">
+        <a id="play-btn" class="menu-item is-primary" href="./game.html">
+          ▶ Jouer
+        </a>
+
+        <button class="menu-item" type="button" id="howto-btn">
+          ❖ Comment jouer ?
+        </button>
+
+        <button class="menu-item" type="button" id="credits-btn">
+          ✦ CREDITS
+        </button>
+      </nav>
+
+      <section class="arcade-help" id="howto" hidden>
+        <h2>Contrôles</h2>
+        <div class="controls">
+          <span class="label">Bouger</span>
+          <div class="control-row dpad">
+            <span class="key"><i class="fa-solid fa-arrow-left"></i></span>
+            <span class="key"><i class="fa-solid fa-arrow-up"></i></span>
+            <span class="key"><i class="fa-solid fa-arrow-down"></i></span>
+            <span class="key"><i class="fa-solid fa-arrow-right"></i></span>
+          </div>
+
+          <span class="label">Tirer</span>
+          <div class="control-row">
+            <span class="key wide">SPACE</span>
+          </div>
+        </div>
+
+        <p class="arcade-hint">
+          Astuce : reste mobile et anticipe les patterns ennemis.
+        </p>
+      </section>
+
+      <section class="arcade-help" id="credits" hidden>
+        <h2>Credits</h2>
+        <p>Made with p5.js • Mazinger-Type v0.1</p>
+      </section>
+
+      <footer class="arcade-footer">
+        <span class="press">PRESSE <b>SPACE</b> POUR JOUER</span>
+      </footer>
     </main>
+
+    <script src="./assets/js/index.js"></script>
   </body>
 </html>
