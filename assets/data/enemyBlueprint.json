@@ -72,6 +72,30 @@
   },
   "waves": [
     {
+      "level": 1,
+      "count": 5,
+      "type": "basic",
+      "spawnTime": 500,
+      "spawnPattern": "diagonal",
+      "theme": "mapOne"
+    },
+    {
+      "level": 2,
+      "count": 10,
+      "type": ["basic"],
+      "spawnTime": 100,
+      "spawnPattern": "formation",
+      "theme": "mapOne"
+    },
+    {
+      "level": 3,
+      "count": 15,
+      "type": ["alien", "basic"],
+      "spawnTime": 1000,
+      "spawnPattern": "star",
+      "theme": "mapOne"
+    },
+    {
       "level": 4,
       "count": 1,
       "type": ["bossOne"],

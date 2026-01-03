@@ -1,5 +1,13 @@
 let mobs = [];
 
+// Musique
+
+let musicMapOne, musicMapTwo, musicBoss, currentMusic;
+let audioUnlocked = false;
+let musicKey = "";
+let explosionSound;
+let playerShotSound;
+
 //  Gestion des vagues
 let Level = 0;
 let spawnInWave = 0;
@@ -54,15 +62,24 @@ function preload() {
   spaceShip = loadImage("assets/images/enemy/spaceship.jpg");
   eye = loadImage("assets/images/enemy/eyebot.png");
 
+  // Boss
+  bossOne = loadImage("assets/images/enemy/bossOne.png");
+
+  // Joueur
   playerBlueprint = loadJSON("assets/data/playerBlueprint.json");
   goldorakModel = loadImage("assets/images/player/Goldorak.png");
-
-  bossOne = loadImage("assets/images/enemy/bossOne.png");
 
   mapOne = loadImage("assets/images/themes/mapOne.png");
   mapTwo = loadImage("assets/images/themes/mapTwo.png");
   mapThree = loadImage("assets/images/themes/mapThree.png");
   mapFour = loadImage("assets/images/themes/mapFour.png");
+
+  // Musique
+  musicMapOne = loadSound("assets/sounds/mapOne.mp3");
+  musicMapTwo = loadSound("assets/sounds/mapTwo.mp3");
+  musicBoss = loadSound("assets/sounds/bossOne.mp3");
+  explosionSound = loadSound("assets/sounds/explosion.mp3");
+  playerShotSound = loadSound("assets/sounds/playerShot.mp3");
 }
 
 // Canvas
@@ -74,6 +91,7 @@ function setup() {
 
   let firstWave = blueprint.waves[Level];
   activeMap = changeMap(firstWave);
+  applyMusicForWave(firstWave);
 
   const stats = playerBlueprint.goldorak;
   const playerConfig = {
@@ -86,11 +104,106 @@ function setup() {
   lastPlayerShot = millis();
 }
 
+// Musique
+
+function keyPressed() {
+  startMusicIfReady();
+
+  if (keyCode === 32) {
+    // SPACE
+    shootPlayer();
+  }
+}
+
+function unlockAudioOnce() {
+  if (audioUnlocked) return;
+  userStartAudio();
+  audioUnlocked = true;
+}
+
+function playLoop(track, volume = 0.35) {
+  if (!track || !track.isLoaded()) return;
+  track.setLoop(true);
+  track.setVolume(volume);
+  track.play();
+}
+
+function stopTrack(track) {
+  if (track && track.isPlaying()) track.stop();
+}
+
+function pickBaseTrack(theme) {
+  // mapOne -> musicMapOne, mapTwo/mapThree/mapFour -> musicMapTwo
+  if (theme === "mapOne") return musicMapOne;
+  return musicMapTwo || musicMapOne; // fallback si mapTwo pas chargé
+}
+
+function waveHasBoss(wave) {
+  if (!wave) return false;
+  if (wave.type === "bossOne") return true;
+  return Array.isArray(wave.type) && wave.type.includes("bossOne");
+}
+
+function applyMusicForWave(wave) {
+  const theme = wave?.theme || "mapOne";
+
+  // Boss prioritaire
+  if (waveHasBoss(wave)) {
+    switchMusic("boss", musicBoss, 0.5);
+    return;
+  }
+
+  // Musique de base selon la map
+  const baseTrack = pickBaseTrack(theme);
+  const key = `base:${theme}`;
+  switchMusic(key, baseTrack, 0.35);
+}
+
+function switchMusic(key, track, volume) {
+  // évite de redémarrer la même musique
+  if (musicKey === key && track && track.isPlaying()) return;
+
+  musicKey = key;
+  currentMusic = track;
+
+  // si audio pas encore unlock, on attend une interaction
+  if (!audioUnlocked) return;
+
+  stopTrack(musicMapOne);
+  stopTrack(musicMapTwo);
+  stopTrack(musicBoss);
+
+  playLoop(currentMusic, volume);
+}
+
+function startMusicIfReady() {
+  unlockAudioOnce();
+
+  // choisir la bonne musique selon la vague/map actuelle
+  if (!currentMusic) {
+    const wave = blueprint?.waves?.[Level];
+    applyMusicForWave(wave);
+  }
+
+  // si on avait choisi une musique avant unlock, on la lance maintenant
+  if (currentMusic && !currentMusic.isPlaying()) {
+    const vol = musicKey.startsWith("boss") ? 0.5 : 0.35;
+    playLoop(currentMusic, vol);
+  }
+}
+
 function shootPlayer() {
+  startMusicIfReady();
   // fireRate vient du blueprint du joueur
   const fireRate = playerBlueprint.goldorak.fireRate;
 
   if (millis() - lastPlayerShot < fireRate) return;
+
+  // 🔊 son de tir
+  if (playerShotSound && playerShotSound.isLoaded()) {
+    playerShotSound.rate(random(0.95, 1.05));
+    playerShotSound.play(0, 1, 0.05);
+  }
 
   const b = new PlayerBullet(
     goldorak.x,
@@ -135,7 +248,6 @@ function handleWaves() {
   if (!wave) {
     return;
   }
-
   // Attendre que tout les ennemis disparaisse pour passer à la vague suivante
   if (spawnInWave >= wave.count) {
     if (mobs.length === 0 && millis() > nextWave && !autoMoveUp) {
@@ -278,7 +390,7 @@ function draw() {
       if (newWave) {
         activeMap = changeMap(newWave);
       }
-
+      applyMusicForWave(newWave);
       // on remet le vaisseau en bas de l'écran sur la nouvelle map
       goldorak.y = height / 2 + 100;
 
