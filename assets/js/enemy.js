@@ -124,9 +124,14 @@ class Enemy {
 
     // Sortie d'écran = mort (pour les ennemis classiques)
     // Lance le timer d'explosion
-    if (this.y > height / 2 - this.size / 2) {
+    if (this.y > height / 2 - this.size / 2 && !this.dead) {
       this.dead = true;
       this.blastTimer = millis();
+
+      // 🔊 son d'explosion (mort par sortie écran)
+      if (typeof explosionSound !== "undefined" && explosionSound.isLoaded()) {
+        explosionSound.play(0, 1, 0.1);
+      }
     }
   }
 
@@ -161,10 +166,16 @@ class Enemy {
     if (this.dead) {
       return millis() - this.blastTimer > this.duration;
     }
+
     // Mort par tirs
-    if (this.hp <= 0) {
+    if (this.hp <= 0 && !this.dead) {
       this.dead = true;
       this.blastTimer = millis();
+      // 🔊 son d'explosion (si dispo)
+      if (typeof explosionSound !== "undefined" && explosionSound.isLoaded()) {
+        explosionSound.play(0, 1, 0.1);
+      }
+
       return false;
     }
     return false;
