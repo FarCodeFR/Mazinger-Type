@@ -28,7 +28,7 @@
       "bulletPatterns": "spiral"
     },
     "bossOne": {
-      "hp": 3,
+      "hp": 20,
       "vx": 1.2,
       "vy": 0,
       "size": 200,
@@ -72,39 +72,23 @@
   },
   "waves": [
     {
-      "level": 1,
-      "count": 5,
-      "type": "basic",
-      "spawnTime": 500,
-      "spawnPattern": "diagonal",
+      "level": 4,
+      "count": 1,
+      "type": ["bossOne"],
+      "spawnTime": 1000,
+      "spawnPattern": "wave",
       "theme": "mapOne"
     },
     {
-      "level": 2,
-      "count": 10,
-      "type": ["basic"],
-      "spawnTime": 100,
-      "spawnPattern": "formation",
-      "theme": "mapTwo"
-    },
-    {
-      "level": 3,
-      "count": 15,
-      "type": ["alien", "eye"],
-      "spawnTime": 1000,
-      "spawnPattern": "star",
-      "theme": "mapTwo"
-    },
-    {
-      "level": 4,
+      "level": 5,
       "count": 30,
-      "type": ["spaceship", "basic"],
+      "type": ["eye", "basic"],
       "spawnTime": 200,
       "spawnPattern": "wave",
       "theme": "mapTwo"
     },
     {
-      "level": 5,
+      "level": 6,
       "theme": "mapThree",
       "count": 30,
       "type": ["spaceship", "basic"],
@@ -112,7 +96,7 @@
       "spawnPattern": "line"
     },
     {
-      "level": 6,
+      "level": 7,
       "theme": "mapFour"
     }
   ]
