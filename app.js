@@ -10,6 +10,10 @@ let waveCooldown = 2000;
 // Gestion des tirs des ennemis
 let enemyBullets = [];
 
+// Tir joueur
+let playerBullets = [];
+let lastPlayerShot = 0;
+
 // Image ennemis
 let basicModel;
 let alienModel;
@@ -79,6 +83,25 @@ function setup() {
 
   playerBaseY = height / 2 - 100;
   goldorak = new Player(playerBaseY, playerConfig);
+  lastPlayerShot = millis();
+}
+
+function shootPlayer() {
+  // fireRate vient du blueprint du joueur
+  const fireRate = playerBlueprint.goldorak.fireRate;
+
+  if (millis() - lastPlayerShot < fireRate) return;
+
+  const b = new PlayerBullet(
+    goldorak.x,
+    goldorak.y - goldorak.size / 2,
+    playerBlueprint.goldorak.bulletSpeed,
+    playerBlueprint.goldorak.bulletSize,
+    playerBlueprint.goldorak.bulletColor
+  );
+
+  playerBullets.push(b);
+  lastPlayerShot = millis();
 }
 
 // swith enemy
@@ -196,6 +219,44 @@ function changeMap(wave) {
   }
 }
 
+// Impacte du tir sur l'ennemi
+
+function handlePlayerBulletHits() {
+  for (let i = playerBullets.length - 1; i >= 0; i--) {
+    const b = playerBullets[i];
+    let hitSomething = false;
+
+    for (let j = mobs.length - 1; j >= 0; j--) {
+      const e = mobs[j];
+
+      // Ne pas toucher un ennemi déjà mort / en explosion
+      if (e.dead) continue;
+
+      // Collision simple : distance (cercle/cercle)
+      const d = dist(b.x, b.y, e.x, e.y);
+      const hitRadius = e.size * 0.5 + b.size * 0.8;
+
+      if (d < hitRadius) {
+        // Dégâts
+        e.hp -= 1;
+
+        // Petit feedback visuel (tu as déjà le tremblement dans Enemy.draw)
+        e.trembleUntil = millis() + 120;
+
+        // La balle disparaît à l'impact
+        b.dead = true;
+
+        hitSomething = true;
+        break; // une balle ne touche qu’un ennemi
+      }
+    }
+
+    if (hitSomething) {
+      playerBullets.splice(i, 1);
+    }
+  }
+}
+
 // Boucle de jeu
 function draw() {
   background(0);
@@ -232,6 +293,16 @@ function draw() {
   } else {
     // Jeu normal
     handleWaves();
+
+    if (keyIsDown(32)) shootPlayer();
+
+    playerBullets.forEach((b) => {
+      b.update();
+      b.draw();
+    });
+    // Collision balle joueur contre ennemis
+    handlePlayerBulletHits();
+    playerBullets = playerBullets.filter((b) => !b.isDead());
 
     mobs.forEach((e) => {
       e.update();
