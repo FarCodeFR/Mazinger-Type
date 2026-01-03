@@ -1,5 +1,10 @@
 let mobs = [];
 
+// Score
+let score = 0;
+let scorePopups = [];
+let arcadeFont;
+
 // Musique
 
 let musicMapOne, musicMapTwo, musicBoss, currentMusic;
@@ -80,12 +85,19 @@ function preload() {
   musicBoss = loadSound("assets/sounds/bossOne.mp3");
   explosionSound = loadSound("assets/sounds/explosion.mp3");
   playerShotSound = loadSound("assets/sounds/playerShot.mp3");
+
+  // Score
+  arcadeFont = loadFont("assets/fonts/score.ttf");
 }
 
 // Canvas
 function setup() {
   let zone = createCanvas(windowWidth / 1.5, windowHeight, WEBGL);
   zone.parent("game-container");
+  const menuBtn = document.getElementById("menu-btn");
+  if (menuBtn) {
+    menuBtn.addEventListener("click", goToMenu);
+  }
 
   ortho(-width / 2, width / 2, -height / 2, height / 2, 0, 1000);
 
@@ -104,10 +116,70 @@ function setup() {
   lastPlayerShot = millis();
 }
 
+// Score
+
+function updateScorePopups() {
+  for (let i = scorePopups.length - 1; i >= 0; i--) {
+    const p = scorePopups[i];
+    p.y -= p.vy;
+    p.life--;
+
+    if (p.life <= 0) {
+      scorePopups.splice(i, 1);
+    }
+  }
+}
+
+function drawScorePopups() {
+  push();
+  textAlign(CENTER, CENTER);
+  textSize(25);
+  textFont(arcadeFont);
+
+  for (const p of scorePopups) {
+    const alpha = map(p.life, 0, 60, 0, 255);
+    fill(255, 200, 50, alpha);
+
+    push();
+    translate(p.x, p.y - 40, 400);
+    text(`+${p.value}`, 0, 0);
+    pop();
+  }
+
+  pop();
+}
+
+//  Sauvegarde le score
+
+function saveScore() {
+  const best = Number(localStorage.getItem("bestScore") || 0);
+
+  if (score > best) {
+    localStorage.setItem("bestScore", String(score));
+  }
+
+  localStorage.setItem("lastScore", String(score));
+}
+
+//  Retour menu
+
+function goToMenu() {
+  try {
+    saveScore();
+  } catch (e) {
+    console.warn("saveScore failed:", e);
+  }
+  window.location.href = "./index.html";
+}
+
 // Musique
 
 function keyPressed() {
   startMusicIfReady();
+
+  if (key === "Escape") {
+    goToMenu();
+  }
 
   if (keyCode === 32) {
     // SPACE
@@ -331,8 +403,7 @@ function changeMap(wave) {
   }
 }
 
-// Impacte du tir sur l'ennemi
-
+// Impact du tir sur l'ennemi
 function handlePlayerBulletHits() {
   for (let i = playerBullets.length - 1; i >= 0; i--) {
     const b = playerBullets[i];
@@ -351,12 +422,41 @@ function handlePlayerBulletHits() {
       if (d < hitRadius) {
         // Dégâts
         e.hp -= 1;
-
-        // Petit feedback visuel (tu as déjà le tremblement dans Enemy.draw)
         e.trembleUntil = millis() + 120;
 
         // La balle disparaît à l'impact
         b.dead = true;
+        console.log(
+          "KILL:",
+          e.type,
+          "scoreValue:",
+          e.scoreValue,
+          "total:",
+          score
+        );
+
+        // ✅ Si l'ennemi vient d'atteindre 0 HP -> explosion + score + popup
+        if (e.hp <= 0 && !e.dead) {
+          e.dead = true;
+          e.blastTimer = millis();
+
+          // 🔊 son d'explosion
+          if (explosionSound && explosionSound.isLoaded()) {
+            explosionSound.play(0, 1, 0.1);
+          }
+
+          // ⭐ score total
+          score += e.scoreValue;
+
+          // ⭐ popup "+100"
+          scorePopups.push({
+            x: e.x,
+            y: e.y,
+            value: e.scoreValue,
+            life: 60,
+            vy: random(0.8, 1.2),
+          });
+        }
 
         hitSomething = true;
         break; // une balle ne touche qu’un ennemi
@@ -420,6 +520,8 @@ function draw() {
       e.update();
       e.draw();
     });
+    updateScorePopups();
+    drawScorePopups();
     enemyBullets.forEach((b) => {
       b.update();
       b.draw();
@@ -435,6 +537,12 @@ function draw() {
   const levelDisplay = document.getElementById("level-display");
   if (levelDisplay) {
     levelDisplay.textContent = `Level: ${Level + 1}`;
+  }
+
+  // Mettre à jour l'affichage du score
+  const scoreDisplay = document.getElementById("score-display");
+  if (scoreDisplay) {
+    scoreDisplay.textContent = `Score: ${score}`;
   }
 
   // Mettre à jour le titre de l'onglet

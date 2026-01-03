@@ -26,9 +26,10 @@ class Enemy {
     this.bulletShape = config.bulletShape;
     // Pattern de tir
     this.bulletPatterns = config.bulletPatterns || "straight";
-
     // Type (utile pour comportements spécifiques comme le boss)
     this.type = config.type;
+    // Score
+    this.scoreValue = config.score || 0;
 
     // Comportement par défaut pour le boss : spawn en haut et patrouille horizontale
     if (this.type === "bossOne") {
@@ -171,12 +172,6 @@ class Enemy {
     if (this.hp <= 0 && !this.dead) {
       this.dead = true;
       this.blastTimer = millis();
-      // 🔊 son d'explosion (si dispo)
-      if (typeof explosionSound !== "undefined" && explosionSound.isLoaded()) {
-        explosionSound.play(0, 1, 0.1);
-      }
-
-      return false;
     }
     return false;
   }
