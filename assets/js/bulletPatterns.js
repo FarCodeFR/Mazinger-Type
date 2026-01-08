@@ -17,7 +17,13 @@ const bulletPatterns = {
     );
   },
 
-  // Patterns spécifiques au boss
+  /**
+   * Pattern spécial boss : cercle complet de tirs.
+   *
+   * - Envoie plusieurs balles réparties sur 360°
+   * - Très lisible visuellement
+   * - Bon pattern “signature” de boss
+   */
   boss_ring(enemy, bulletsArray) {
     const count = 18;
     for (let i = 0; i < count; i++) {
@@ -38,6 +44,13 @@ const bulletPatterns = {
     }
   },
 
+  /**
+   * Tir ciblé vers la position actuelle du joueur.
+   *
+   * - Calcule un angle dynamique vers goldorak
+   * - Le tir n’est PAS homing après le tir
+   *   (il vise une fois puis continue droit)
+   */
   boss_homing(enemy, bulletsArray) {
     if (typeof goldorak === "undefined") return;
     const angle = atan2(goldorak.y - enemy.y, goldorak.x - enemy.x);
@@ -56,6 +69,13 @@ const bulletPatterns = {
     );
   },
 
+  /**
+   * Rafale lourde en éventail qui tourne progressivement.
+   *
+   * - Plusieurs balles par tir
+   * - Angle global qui évolue dans le temps (enemy.shotAngle)
+   * - Donne une impression de pression constante
+   */
   boss_heavy(enemy, bulletsArray) {
     const spread = 0.6;
     const count = 11;
@@ -78,7 +98,13 @@ const bulletPatterns = {
     enemy.shotAngle += 0.05;
   },
 
-  // Tir en spirale
+  /**
+   * Tir en spirale continue.
+   *
+   * - Une balle par tir
+   * - L’angle augmente progressivement
+   * - Peut être combiné avec une rotation visuelle de la balle
+   */
   spiral(enemy, bulletsArray) {
     const angle = enemy.shotAngle;
     bulletsArray.push(
@@ -98,8 +124,13 @@ const bulletPatterns = {
     enemy.shotAngle += enemy.shotAngleSpeed;
   },
 
-  // Tir test
-  boom(enemy, bulletsArray) {
+  /**
+   * Tir chaotique / test.
+   *
+   * - Plusieurs balles
+   * - Angles aléatoires
+   * - Pattern imprévisible (bon pour ennemis “fous” ou power-ups)
+   */ boom(enemy, bulletsArray) {
     const count = 10;
     for (let i = 0; i < count; i++) {
       const angle = enemy.shotAngle + random(count);
@@ -119,8 +150,13 @@ const bulletPatterns = {
     }
   },
 
-  // Tir rafal
-  shotgun(enemy, bulletsArray) {
+  /**
+   * Tir en cône (fusil à pompe).
+   *
+   * - Plusieurs balles en éventail
+   * - Angles légèrement randomisés
+   * - Très efficace à courte/moyenne distance
+   */ shotgun(enemy, bulletsArray) {
     const spread = 0.3; // angle d’ouverture (~17°)
     const count = 7; // nombre de balles
 

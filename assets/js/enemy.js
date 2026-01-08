@@ -1,20 +1,21 @@
+// === Enemy (déplacement, tir, comportements spéciaux boss)
 class Enemy {
   constructor(x, y, config) {
-    // Position horizontale et verticale
+    // Position
     this.x = x;
     this.y = y;
-    // Vitesse de déplacement
+    // Vitesse (vx: horizontal, vy: vertical)
     this.vx = config.vx;
     this.vy = config.vy;
     // Stats
     this.hp = config.hp;
     this.dead = false;
-    // Style
+    // Rendering (texture + explosion)
     this.model = config.model;
     this.blast = config.blast;
-    // Tailles
+    // Taille
     this.size = config.size;
-    // Explosion timer & duration
+    // Gestion explosion (timer + durée)
     this.blastTimer = 0;
     this.duration = 400;
     this.blastSize = this.size * 1.5;
@@ -24,41 +25,38 @@ class Enemy {
     this.bulletSize = config.bulletSize;
     this.bulletColor = config.bulletColor;
     this.bulletShape = config.bulletShape;
-    // Pattern de tir
-    this.bulletPatterns = config.bulletPatterns || "straight";
-    // Type (utile pour comportements spécifiques comme le boss)
+    // Pattern de tir (string ou array pour boss)
+    this.bulletPatterns = config.bulletPatterns || "regular";
+    // Type et score
     this.type = config.type;
-    // Score
     this.scoreValue = config.score || 0;
 
-    // Comportement par défaut pour le boss : spawn en haut et patrouille horizontale
+    // Spécifique boss : spawn en haut + patrouille horizontale + alternance patterns
     if (this.type === "bossOne") {
       this.vy = 0;
-      // vitesse horizontale réduite par défaut (modifiable depuis le blueprint)
+      // vx par défaut si config.vx est absent ou 0
       this.vx =
         config.vx && Math.abs(config.vx) > 0 ? Math.sign(config.vx) * 1.2 : 1.2;
       if (typeof height !== "undefined") {
         this.y = -height / 2 + this.size;
       }
 
-      // Supporter une liste de patterns pour alterner au rebond
+      // Support d'une liste de patterns (ex: ["boss_ring","boss_homing","boss_heavy"])
       if (Array.isArray(config.bulletPatterns)) {
         this.patternList = config.bulletPatterns;
       } else if (Array.isArray(config.bulletPatternsList)) {
         this.patternList = config.bulletPatternsList;
       } else {
-        this.patternList = [config.bulletPatterns || "straight"];
+        this.patternList = [config.bulletPatterns || "regular"];
       }
       this.currentPatternIndex = 0;
       this.bulletPatterns =
         this.patternList[this.currentPatternIndex] || this.bulletPatterns;
     }
 
-    // Spirale
+    // Variables utiles pour la spirale / patterns animés
     this.shotAngle = HALF_PI;
     this.shotAngleSpeed = config.shotAngleSpeed || 0;
-
-    // Animation du tir
     this.bulletSpiralColor = config.bulletSpiralColor || this.bulletColor;
     this.bulletRotationSpeed = config.bulletRotationSpeed || 0;
 
@@ -79,8 +77,9 @@ class Enemy {
     // Tirs
     // millis temps actuel - temps du dernier tir > délai entre deux tirs
     if (millis() - this.lastShot > this.fireRate) {
+      // Pattern choisi : si inconnu -> fallback sur "regular"
       const pattern =
-        bulletPatterns[this.bulletPatterns] || bulletPatterns.straight;
+        bulletPatterns[this.bulletPatterns] || bulletPatterns.regular;
 
       pattern(this, enemyBullets);
 

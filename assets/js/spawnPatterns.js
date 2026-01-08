@@ -1,3 +1,19 @@
+/**
+ * Cet objet regroupe tous les patterns de SPAWN des ennemis.
+ *
+ * Chaque fonction retourne un tableau de positions { x, y }.
+ * Ces positions sont ensuite utilisées dans app.js pour appeler spawnEnemy().
+ *
+ * Signature commune :
+ * pattern(waveIndex, enemyType, count, screenWidth, screenHeight)
+ *
+ * - waveIndex     : index de la vague actuelle (peut servir à varier le pattern)
+ * - enemyType     : stats de l’ennemi (notamment size)
+ * - count         : nombre total d’ennemis à spawn
+ * - screenWidth   : largeur du canvas
+ * - screenHeight  : hauteur du canvas
+ */
+
 const spawnPatterns = {
   // Pattern par défaut : spawn aléatoire
   random(waveIndex, enemyType, count, screenWidth, screenHeight) {
