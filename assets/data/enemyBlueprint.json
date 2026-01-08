@@ -93,14 +93,14 @@
     {
       "level": 3,
       "count": 10,
-      "type": "basic",
+      "type": ["basic", "eye"],
       "spawnTime": 560,
-      "spawnPattern": "wave",
+      "spawnPattern": "star",
       "theme": "mapOne"
     },
     {
       "level": 4,
-      "count": 8,
+      "count": 12,
       "type": ["basic", "alien"],
       "spawnTime": 600,
       "spawnPattern": "formation",

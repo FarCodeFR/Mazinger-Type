@@ -18,11 +18,11 @@ const best = Number(localStorage.getItem("bestScore") || "0");
 if (bestScoreEl) bestScoreEl.textContent = best.toString();
 
 // Boutons
-const howtoBtn = document.getElementById("howto-btn");
+const helpBtn = document.getElementById("help-btn");
 const creditsBtn = document.getElementById("credits-btn");
 
 // Panneaux correspondants
-const howto = document.getElementById("howto");
+const help = document.getElementById("help");
 const credits = document.getElementById("credits");
 
 function toggle(panel) {
@@ -34,10 +34,10 @@ function toggle(panel) {
  * - cache les crédits si ouverts
  * - affiche / masque le panneau How To
  */
-if (howtoBtn) {
-  howtoBtn.addEventListener("click", () => {
+if (helpBtn) {
+  helpBtn.addEventListener("click", () => {
     if (credits) credits.hidden = true;
-    toggle(howto);
+    toggle(help);
   });
 }
 
@@ -47,7 +47,7 @@ if (howtoBtn) {
  */
 if (creditsBtn) {
   creditsBtn.addEventListener("click", () => {
-    if (howto) howto.hidden = true;
+    if (help) help.hidden = true;
     toggle(credits);
   });
 }
@@ -56,7 +56,8 @@ if (creditsBtn) {
  * Appui sur la touche ESPACE :
  * - redirige vers game.html
  * - permet de lancer le jeu sans cliquer
- */ document.addEventListener("keydown", (e) => {
+ */
+document.addEventListener("keydown", (e) => {
   if (e.code === "Space") {
     window.location.href = "./game.html";
   }
